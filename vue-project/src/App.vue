@@ -1,191 +1,95 @@
+<script setup>
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+</script>
+
 <template>
-  <div class="container">
-    <Header />
-    <router-view />
-    <Loading v-if="states.isLoading" />
-  </div>
+  <header>
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="@/assets/logo.svg"
+      width="125"
+      height="125"
+    />
+
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+
+      <nav>
+        <RouterLink to="/">Home</RouterLink>,
+        <RouterLink to="/about">About</RouterLink>,
+        <RouterLink to="/user">UserList</RouterLink>,
+        <RouterLink to="/user/findById">UserSelect</RouterLink>,
+        <RouterLink to="/user/editById">UserUpdate</RouterLink>,
+        <RouterLink to="/user/save">UserCreate</RouterLink>
+      </nav>
+    </div>
+  </header>
+
+  <RouterView />
 </template>
 
-<script setup>
-import { reactive, provide, ref, computed } from 'vue';
-import Header from '@/components/Header.vue';
-import Loading from '@/components/Loading.vue';
-import axios from 'axios';
+<style scoped>
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+}
 
-const BASEURI = 'http://localhost:3000'; // JSON Server URL
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
 
-const states = reactive({ isLoading: false });
+nav {
+  width: 100%;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2rem;
+}
 
-// 수입 목록 상태 관리
-const incomeList = ref([]);
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
 
-// 지출 목록 상태 관리
-const expenditureList = ref([]);
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
 
-// 수입 목록을 조회합니다.
-const fetchIncomeList = async () => {
-  states.isLoading = true;
-  try {
-    const response = await axios.get(`${BASEURI}/incomes`);
-    if (response.status === 200) {
-      incomeList.value = response.data;
-    } else {
-      alert('수입 데이터 조회 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
   }
-  states.isLoading = false;
-  ww;
-};
 
-// 지출 목록을 조회합니다.
-const fetchExpenditureList = async () => {
-  states.isLoading = true;
-  try {
-    const response = await axios.get(`${BASEURI}/expenditures`);
-    if (response.status === 200) {
-      expenditureList.value = response.data;
-    } else {
-      alert('지출 데이터 조회 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
+  .logo {
+    margin: 0 2rem 0 0;
   }
-  states.isLoading = false;
-};
 
-// 새로운 수입 항목을 추가합니다.
-const addIncome = async (income, successCallback) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.post(`${BASEURI}/incomes`, income);
-    if (response.status === 201) {
-      incomeList.value.push(response.data);
-      successCallback();
-    } else {
-      alert('수입 추가 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
   }
-  states.isLoading = false;
-};
 
-// 새로운 지출 항목을 추가합니다.
-const addExpenditure = async (expenditure, successCallback) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.post(`${BASEURI}/expenditures`, expenditure);
-    if (response.status === 201) {
-      expenditureList.value.push(response.data);
-      successCallback();
-    } else {
-      alert('지출 추가 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
   }
-  states.isLoading = false;
-};
-
-// 수입 항목을 삭제합니다.
-const deleteIncome = async (id) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.delete(`${BASEURI}/incomes/${id}`);
-    if (response.status === 200) {
-      const index = incomeList.value.findIndex((income) => income.id === id);
-      incomeList.value.splice(index, 1);
-    } else {
-      alert('수입 삭제 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
-  }
-  states.isLoading = false;
-};
-
-// 지출 항목을 삭제합니다.
-const deleteExpenditure = async (id) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.delete(`${BASEURI}/expenditures/${id}`);
-    if (response.status === 200) {
-      const index = expenditureList.value.findIndex(
-        (expenditure) => expenditure.id === id
-      );
-      expenditureList.value.splice(index, 1);
-    } else {
-      alert('지출 삭제 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
-  }
-  states.isLoading = false;
-};
-
-// 수입 항목을 업데이트합니다.
-const updateIncome = async (income, successCallback) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.put(`${BASEURI}/incomes/${income.id}`, income);
-    if (response.status === 200) {
-      const index = incomeList.value.findIndex((i) => i.id === income.id);
-      incomeList.value[index] = income;
-      successCallback();
-    } else {
-      alert('수입 변경 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
-  }
-  states.isLoading = false;
-};
-
-// 지출 항목을 업데이트합니다.
-const updateExpenditure = async (expenditure, successCallback) => {
-  states.isLoading = true;
-  try {
-    const response = await axios.put(
-      `${BASEURI}/expenditures/${expenditure.id}`,
-      expenditure
-    );
-    if (response.status === 200) {
-      const index = expenditureList.value.findIndex(
-        (e) => e.id === expenditure.id
-      );
-      expenditureList.value[index] = expenditure;
-      successCallback();
-    } else {
-      alert('지출 변경 실패');
-    }
-  } catch (error) {
-    alert('에러발생 :' + error);
-  }
-  states.isLoading = false;
-};
-
-provide(
-  'incomeList',
-  computed(() => incomeList.value)
-);
-provide(
-  'expenditureList',
-  computed(() => expenditureList.value)
-);
-provide('actions', {
-  fetchIncomeList,
-  fetchExpenditureList,
-  addIncome,
-  addExpenditure,
-  deleteIncome,
-  deleteExpenditure,
-  updateIncome,
-  updateExpenditure,
-});
-
-// 데이터 초기화
-fetchIncomeList();
-fetchExpenditureList();
-</script>
+}
+</style>
