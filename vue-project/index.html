@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      /* CSS 스타일링 */
+      .fixed-button {
+        position: fixed;
+        bottom: 15px; /* 하단 여백 조정 */
+        left: 50%; /* 가운데 정렬 */
+        transform: translateX(-50%);
+        background-color: yellow; /* 배경색 */
+        color: #020202; /* 텍스트 색상 */
+        padding: 10px 20px; /* 내부 여백 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 버튼 추가 -->
+    <button class="fixed-button">스크롤하기</button>
+
+    <div id="app"></div>
+
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // 스크롤 버튼 클릭 시 페이지 상단으로 스크롤 이동
+      document
+        .querySelector('.fixed-button')
+        .addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+  </body>
+</html>
