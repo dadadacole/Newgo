@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "",
+      "date": "",
+      "type": "",
+      "category": "",
+      "amount": "",
+      "memo": ""
+    }
+  ],
+  "expenditures": [
+    {
+      "id": "",
+      "date": "",
+      "type": "",
+      "category": "",
+      "amount": "",
+      "memo": ""
+    }
+  ]
+}
